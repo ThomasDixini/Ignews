@@ -1,0 +1,59 @@
+.headerContainer {
+    height: 5rem;
+    border-bottom: 1px solid #29292e;
+}
+
+.headerContent {
+
+    height: 5rem;
+    max-width: 1020px;
+    width: 100%;
+    margin: 0 auto;
+
+    
+
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+
+    nav {
+        a + a {
+            margin-left: 2rem;
+        }
+
+        a {
+            display: inline-block;
+            position: relative;
+            padding: 0 0.5rem;
+            height: 5rem;
+            line-height: 5rem;
+            color: var(--gray-300);
+        }
+
+        a:hover {
+            color: var(--white);
+            font-weight: bold;
+        }
+  
+        a.active::after {
+            content: " ";
+
+            width: 100%;
+            height: 3px;
+
+            border-radius: 3px 3px 0 0;
+
+            position: absolute;
+            bottom: 0;
+            left: 0;
+
+            
+            background-color: var(--yellow-500);
+        }
+    }
+
+    button {
+        margin-left: auto;
+    }
+    
+}
