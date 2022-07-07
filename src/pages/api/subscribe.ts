@@ -3,6 +3,7 @@ import { getSession } from "next-auth/react";
 import { fauna } from "../../services/fauna";
 import { query as q } from 'faunadb'
 import { stripe } from '../../services/stripe'
+import Stripe from "stripe";
 
 
 type User = {
@@ -51,6 +52,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             customerId = stripeCustomer.id
         }
 
+        
+        console.log(customerId)
         
 
         

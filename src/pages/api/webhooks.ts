@@ -17,8 +17,16 @@ async function buffer(readable: Readable) {
 }
 
 const relevantEvents = new Set([
-    'checkout.session.completed'
+    'checkout.session.completed',
+    'customer.subscription.deleted',
+    'customer.subscription.updated',
 ]);
+
+export const config = {
+    api: {
+        bodyParser: false,
+    }
+}
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if(req.method == 'POST'){
@@ -38,6 +46,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if(relevantEvents.has(type)){
             try {
                 switch(type){
+                    case 'customer.subscription.updated':
+                    case 'customer.subscription.deleted':
+
+                        const subscription = event.data.object as Stripe.Subscription
+                        console.log("subsId:" + subscription.id)
+                        console.log("sub.Customer:" + subscription.customer.toString())
+
+                        await saveSubscription(
+                            subscription.id,
+                            subscription.customer.toString(),
+                            false
+                        )
+
+                        break;
                     case 'checkout.session.completed':
 
                         const checkoutSesssion = event.data.object as Stripe.Checkout.Session
@@ -45,13 +67,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                         await saveSubscription(
                             checkoutSesssion.subscription.toString(),
                             checkoutSesssion.customer.toString(),
+                            type == 'checkout.session.completed'
                         )
 
                         break;
                     default:
                         throw new Error('Unhandled event');
                 }
-            }catch {
+
+                
+                
+            }catch (err){
+                console.log(err);
                 return res.json({ error: 'Webhook handler Failed'});
             }
         }
