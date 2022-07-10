@@ -1,14 +1,14 @@
 import { fauna } from "../../../services/fauna";
 import { query as q } from 'faunadb'
 import { stripe } from "../../../services/stripe";
-import { useRef } from "react";
+
 
 export async function saveSubscription(
     subscriptionId: string,
     customerId: string,
     createAction = false
 ){
-    await fauna.query(
+    const userRef = await fauna.query(
         q.Select(
             'ref',
             q.Get(
@@ -24,7 +24,7 @@ export async function saveSubscription(
 
     const subscriptionData = {
         id: subscription.id,
-        userId: useRef,
+        userId: userRef,
         status: subscription.status,
         price_id: subscription.items.data[0].price.id,
     }
